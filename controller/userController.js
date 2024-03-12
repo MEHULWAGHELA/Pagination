@@ -28,7 +28,27 @@ const userController = (socket) => {
             })
         }
         catch (error) {
-            socket.emit('get|all|user', {
+            socket.emit('add|user', {
+                success: false,
+                error: error.message
+            })
+        }
+    })
+    socket.on('filter|user', async (req) => {
+        try {
+            const data = await User.aggregate([
+                {
+                    $addFields: { name: '' }
+                }
+            ])
+            socket.emit('filter|user', {
+                success: true,
+                data: data,
+                meassage: 'User filter Successfully'
+            })
+        }
+        catch (error) {
+            socket.emit('filter|user', {
                 success: false,
                 error: error.message
             })
